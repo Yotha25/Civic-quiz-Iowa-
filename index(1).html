@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Civics Quiz">
+<meta name="theme-color" content="#f5f7fb">
+<title>SF 369 High School Civics Practice Test</title>
+<style>
+:root { --bg:#f5f7fb; --card:#fff; --text:#172033; --muted:#687386; --border:#dbe1ea; --accent:#315efb; --good:#16834b; --bad:#c73535; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.app{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+header{margin:8px 0 18px}
+h1{font-size:26px;margin:0 0 6px}
+.subtitle{color:var(--muted);font-size:14px;line-height:1.45}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:14px 0 10px}
+.progress{height:9px;background:#e5e9f0;border-radius:999px;overflow:hidden;flex:1}
+.progress>div{height:100%;background:var(--accent);width:0%;transition:width .25s}
+.count{font-size:13px;color:var(--muted);white-space:nowrap}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 5px 20px rgba(20,35,60,.06)}
+.badge{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.question{font-size:21px;line-height:1.35;margin:0 0 18px}
+.section-title{font-size:15px;font-weight:800;color:var(--accent);background:#f4f7ff;border:1px solid #dfe7ff;border-radius:12px;padding:11px 13px;margin:0 0 14px;line-height:1.35}
+.option{width:100%;text-align:left;padding:15px 14px;margin:9px 0;border:1px solid var(--border);border-radius:12px;background:#fff;font-size:16px;cursor:pointer;transition:.15s}
+.option:hover:not(:disabled){border-color:var(--accent);background:#f7f9ff}
+.option:disabled{cursor:default}
+.option.correct{border-color:var(--good);background:#edf9f2;color:#0d6438}
+.option.wrong{border-color:var(--bad);background:#fff0f0;color:#9d2525}
+.feedback{margin-top:15px;padding:13px;border-radius:12px;font-weight:650;display:none}
+.feedback.good{display:block;background:#edf9f2;color:#0d6438}
+.feedback.bad{display:block;background:#fff0f0;color:#9d2525}
+.feedback.neutral{display:block;background:#f1f4f8;color:#465164}
+.actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+button.nav,.restart{border:0;border-radius:11px;padding:12px 18px;font-size:15px;font-weight:700;cursor:pointer}
+.next{background:var(--accent);color:#fff;margin-left:auto}
+.next:disabled{opacity:.4;cursor:not-allowed}
+.back{background:#e9edf4;color:#253047}
+.restart{background:#172033;color:#fff}
+.result{display:none;text-align:center}
+.score{font-size:56px;font-weight:800;margin:10px 0 2px}
+.pass{color:var(--good)}
+.fail{color:var(--bad)}
+.result p{color:var(--muted);line-height:1.5}
+.statrow{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0}
+.stat{padding:12px 18px;background:#f3f5f8;border-radius:12px;min-width:100px}
+.stat b{display:block;font-size:22px}
+.small{font-size:12px;color:var(--muted);margin-top:16px;line-height:1.45}
+input.answer{width:100%;padding:14px;border:1px solid var(--border);border-radius:11px;font-size:16px}
+.home{text-align:center;padding-top:8px}.homeIcon{font-size:54px;margin:4px 0 6px}.home h2{font-size:27px;margin:0 0 8px}.homeText{color:var(--muted);line-height:1.5;font-size:15px;margin:0 auto 22px;max-width:560px}.modeChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 auto;max-width:620px}.modeCard{border:1px solid var(--border);border-radius:18px;background:#fff;padding:22px 16px;text-align:center;cursor:pointer;box-shadow:0 5px 20px rgba(20,35,60,.06);transition:.15s}.modeCard:hover{border-color:var(--accent);transform:translateY(-1px)}.modeCard:active{transform:scale(.99)}.modeEmoji{font-size:32px;margin-bottom:8px}.modeCard h3{margin:0 0 6px;font-size:18px}.modeCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}.learning{margin-top:12px;padding:14px;border-radius:12px;background:#f5f7fb;border:1px solid var(--border);line-height:1.55}.learning b{display:block;margin-bottom:5px}.learnWhy{margin-bottom:10px}.learnWrong{font-size:13px;color:#536074}.tracker{margin:18px auto 0;max-width:680px;text-align:left}.tracker h3{margin:0 0 10px;font-size:17px}.trackItem{margin:10px 0}.trackHead{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:5px}.trackBar{height:9px;background:#e5e9f0;border-radius:999px;overflow:hidden}.trackFill{height:100%;border-radius:999px;background:var(--accent);transition:width .25s}.trackEmpty{color:var(--muted);font-size:13px}.modebar{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 6px}.mode{border:1px solid var(--border);border-radius:11px;padding:10px 14px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#172033}.mode:active{transform:scale(.98)}.modehint{font-size:12px;color:var(--muted)}
+
+.learning{margin-top:16px;padding:0;background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;line-height:1.55;box-shadow:0 4px 14px rgba(20,35,60,.04)}
+.learnHead{padding:15px 16px;background:#f4f7ff;border-bottom:1px solid #dfe7ff}.learnHead h3{margin:0;font-size:17px}.learnBody{padding:15px 16px}.learnSection{padding:13px 0;border-bottom:1px solid #edf0f5}.learnSection:first-child{padding-top:0}.learnSection:last-child{border-bottom:0;padding-bottom:0}.learnSection h4{margin:0 0 7px;font-size:14px;color:var(--accent)}.learnSection p{margin:0;color:#344054;font-size:14px}.learnAnswer{font-size:17px;font-weight:800;color:#0d6438}.learnChoices{list-style:none;margin:8px 0 0;padding:0}.learnChoice{margin:9px 0;padding:11px 12px;border:1px solid #e4e8ef;border-radius:11px;background:#fbfcfe;font-size:13.5px;color:#344054}.learnChoice strong{display:block;color:#172033;margin-bottom:3px}.learnStatus{display:inline-block;font-size:11px;font-weight:800;border-radius:999px;padding:3px 7px;margin-right:5px;background:#eef2f7;color:#465164}.learnStatus.complete{background:#e9f8ef;color:#0d6438}.learnStatus.incomplete{background:#fff7df;color:#765b00}.learnStatus.incorrect{background:#fff0f0;color:#9d2525}.learnSource{font-size:12px;color:var(--muted)}.learnCallout{margin-top:9px;padding:10px 11px;border-radius:10px;background:#f5f7fb;border:1px solid var(--border);font-size:13px;color:#465164}.learnAccepted{margin:8px 0 0;padding-left:20px;color:#344054;font-size:13px}.learnCurrent{background:#fff9e8;border-color:#ead8a1}.learnSelf{background:#f1f4f8;border-color:#dce2eb}
+@media(max-width:700px){.modeChoices{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.card{padding:17px}.question{font-size:19px}.option{font-size:15px}.mode{width:100%}.modeChoices{grid-template-columns:1fr}.home h2{font-size:24px}}
+
+.disclaimerOverlay{position:fixed;inset:0;background:rgba(8,18,35,.72);display:flex;align-items:center;justify-content:center;padding:18px;z-index:9999}
+.disclaimerBox{width:min(620px,100%);background:#fff;border-radius:20px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.25);max-height:90vh;overflow:auto}
+.disclaimerBox h2{margin:0 0 10px;font-size:24px}
+.disclaimerBox p{color:#4f5d73;line-height:1.55;margin:10px 0}
+.disclaimerBox ul{color:#4f5d73;line-height:1.55;padding-left:22px}
+.disclaimerNotice{background:#f5f7fb;border:1px solid var(--border);border-radius:14px;padding:13px 14px;margin:15px 0}
+.disclaimerCheck{display:flex;align-items:flex-start;gap:10px;margin:18px 0;font-weight:700;line-height:1.4;cursor:pointer}
+.disclaimerCheck input{width:20px;height:20px;flex:0 0 auto;margin-top:1px;accent-color:var(--accent)}
+.disclaimerContinue{width:100%;padding:13px 16px;border:0;border-radius:12px;background:var(--accent);color:#fff;font-size:16px;font-weight:800;cursor:pointer}
+.disclaimerContinue:disabled{opacity:.45;cursor:not-allowed}
+</style>
+</head>
+<body>
+<div id="disclaimerOverlay" class="disclaimerOverlay" role="dialog" aria-modal="true" aria-labelledby="disclaimerTitle">
+  <div class="disclaimerBox">
+    <h2 id="disclaimerTitle">⚠️ 2026 Iowa Civics Test Disclaimer</h2>
+    <p><b>This practice quiz is intended for the 2026 Iowa SF 369 Civics Test.</b> It is for <b>Iowa only</b> and is designed to help students practice the Iowa civics test requirement.</p>
+    <div class="disclaimerNotice">
+      <b>Answers can change over time.</b> Some civics questions ask about current officeholders or other information that can change. For example, the <b>President, U.S. Representatives, and U.S. Senators</b> can change after elections or other changes in office. Always check the current official information when preparing for a future test.
+    </div>
+    <p>The Iowa Department of Education may update the SF 369 civics test when the underlying USCIS civics test changes and is required to update it after a general election that includes a presidential election.</p>
+    <label class="disclaimerCheck"><input type="checkbox" id="disclaimerAgree"><span>I understand that this is an Iowa-only 2026 practice test and that some answers may change over time.</span></label>
+    <button class="disclaimerContinue" id="disclaimerContinue" disabled>I Understand &amp; Continue</button>
+  </div>
+</div>
+
+<div class="app">
+<header>
+<h1>SF 369 High School Civics Practice Test</h1>
+<div class="subtitle">128 questions from your uploaded study sheet. You pass with <b>60% or higher</b>.</div>
+<div class="modebar"><button class="mode" id="shuffleBtn">🔀 Shuffle Questions</button><span class="modehint" id="modeHint">Original question order</span></div>
+</header>
+
+<div id="home" class="card home">
+  <div class="homeIcon">🇺🇸</div>
+  <h2>Choose your practice mode</h2>
+  <p class="homeText">Practice all 128 SF 369 civics questions in the original order, mix them up, or learn with explanations. Your progress is tracked by test section.</p><div id="homeTracker" class="tracker"></div>
+  <div class="modeChoices">
+    <button class="modeCard" id="regularStart"><div class="modeEmoji">📋</div><h3>Regular Mode</h3><p>Questions in the original order.</p></button>
+    <button class="modeCard" id="shuffleStart"><div class="modeEmoji">🔀</div><h3>Shuffle Mode</h3><p>Questions in a random order every time.</p></button>
+    <button class="modeCard" id="learningStart"><div class="modeEmoji">🧠</div><h3>Learning Mode</h3><p>Get an explanation of why the answer is correct.</p></button>
+  </div>
+</div>
+
+<div id="quizArea" style="display:none">
+  <div class="top"><div class="progress"><div id="bar"></div></div><div class="count" id="count"></div></div>
+  <div class="card">
+    <div class="badge" id="badge"></div>
+    <div class="section-title" id="sectionTitle" style="display:none"></div>
+    <h2 class="question" id="question"></h2>
+    <div id="answers"></div>
+    <div id="feedback" class="feedback"></div>
+    <div id="learning" class="learning" style="display:none"></div>
+    <div class="actions">
+      <button class="nav back" id="back">Back</button>
+      <button class="nav next" id="next" disabled>Next</button>
+    </div>
+  </div>
+</div>
+
+<div id="result" class="card result">
+  <div class="badge">RESULT</div>
+  <h2 id="resultTitle"></h2>
+  <div class="score" id="score"></div>
+  <div id="resultMessage"></div>
+  <div class="statrow">
+    <div class="stat"><b id="correctStat">0</b>Correct</div>
+    <div class="stat"><b id="wrongStat">0</b>Wrong</div>
+    <div class="stat"><b id="gradedStat">0</b>Graded</div>
+  </div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="restart" id="homeBtn">Home</button><button class="restart" id="restart">Retake Quiz</button></div>
+  <div class="small">Question 29 asks for your U.S. Representative and requires a written answer on the official SF 369 test. It is shown as self-check and is not included in the percentage. Question 23 is graded as A. Chuck Grassley, matching the Iowa SF 369 test. Shuffle mode changes only the question order; every question still appears once. Use Home to choose a different mode.</div>
+</div>
+</div>
+
+<noscript><div style="padding:20px;font-family:system-ui"><h2>JavaScript is required</h2><p>Please open this quiz in Safari with JavaScript enabled.</p></div></noscript>
+<script>
+const questions = [{"n": 1, "q": "What is the form of government of the United States?", "options": ["Republic", "Constitution-based federal republic", "Representative democracy", "All of the above"], "answer": 3, "graded": true, "section": "American Government Part A: Principles of American Government"}, {"n": 2, "q": "What is the supreme law of the land?", "options": ["The Magna Carta", "The Declaration of Independence", "The Constitution", "The Supreme Court"], "answer": 2, "graded": true}, {"n": 3, "q": "Name one thing the U.S. Constitution does.", "options": ["Defines powers of government", "Writes the laws", "Tells citizens what they have to do", "Controls the military"], "answer": 0, "graded": true}, {"n": 4, "q": "The U.S. Constitution starts with the words, “We the People.” What does “We the People” mean?", "options": ["The people give up their power", "Consent of the governed", "Liberty for all people", "The pursuit of happiness"], "answer": 1, "graded": true}, {"n": 5, "q": "How are changes made to the U.S. Constitution?", "options": ["A vote in the state legislature", "A vote in Congress", "Through the court system", "The amendment process"], "answer": 3, "graded": true}, {"n": 6, "q": "What does the Bill of Rights protect?", "options": ["The Major Rights", "The basic rights of people living in the United States", "The human rights of people around the world", "The rights guaranteed to all people in their state"], "answer": 1, "graded": true}, {"n": 7, "q": "How many amendments does the U.S. Constitution have?", "options": ["10", "27", "33", "52"], "answer": 1, "graded": true}, {"n": 8, "q": "Why is the Declaration of Independence important?", "options": ["It declared an end to the American Revolution", "It says all people are created equal", "It made George Washington the first president", "It created the three branches of government"], "answer": 1, "graded": true}, {"n": 9, "q": "What founding document said the American colonies were free from Britain?", "options": ["The Magna Carta", "The Articles of Confederation", "The Declaration of Independence", "The Constitution"], "answer": 2, "graded": true}, {"n": 10, "q": "Name two important ideas from the Declaration of Independence and the U.S. Constitution.", "options": ["Liberty and natural rights", "Civic engagement and natural rights", "Rule of law and self-government", "Checks and balances and self-government"], "answer": 0, "graded": true}, {"n": 11, "q": "The words “Life, Liberty, and the pursuit of Happiness” are in what founding document?", "options": ["Declaration of Independence", "U.S. Constitution", "The Magna Carta", "The Articles of Confederation"], "answer": 0, "graded": true}, {"n": 12, "q": "What is the economic system in the United States?", "options": ["Bear market economy", "Capitalist or free market economy", "Socialist economy", "None of the above"], "answer": 1, "graded": true}, {"n": 13, "q": "What is the “rule of law”?", "options": ["No one is above the law", "Leaders must obey the law", "Everyone must follow the law", "All of the above"], "answer": 3, "graded": true}, {"n": 14, "q": "Many documents influenced the U.S. Constitution. Name one.", "options": ["Declaration of Independence", "House Divided Speech", "The “I Have a Dream” Speech", "Arsenal of Democracy Fireside Chat"], "answer": 0, "graded": true}, {"n": 15, "q": "There are three branches of government. Why?", "options": ["Checks and balances", "To support what is outlined in the Articles of Confederation", "To model the U.S. government after that of Great Britain", "To ensure fairness"], "answer": 0, "graded": true}, {"n": 16, "q": "Name the three branches of government.", "options": ["Legislative, presidential, and courts", "Legislative, executive, and judicial", "Executive, defense, and judicial", "Executive legislative, and presidential"], "answer": 1, "graded": true, "section": "American Government Part B: System of Government"}, {"n": 17, "q": "The President of the United States is in charge of which branch of government?", "options": ["Executive", "Legislative", "Courts", "Judicial"], "answer": 0, "graded": true}, {"n": 18, "q": "What part of the federal government writes laws?", "options": ["Court system", "Congress", "Executive branch", "The President’s Cabinet"], "answer": 1, "graded": true}, {"n": 19, "q": "What are the two parts of the U.S. Congress?", "options": ["The Senate and the President", "The Senate and the House of Representatives", "The Supreme Court and the President", "The FBI and the CIA"], "answer": 1, "graded": true}, {"n": 20, "q": "Name one power of the U.S. Congress.", "options": ["Declares war", "Signs laws", "Issues executive orders", "Determines if laws are fair"], "answer": 0, "graded": true}, {"n": 21, "q": "How many U.S. senators are there?", "options": ["9", "50", "100", "435"], "answer": 2, "graded": true}, {"n": 22, "q": "How long is a term for a U.S. senator?", "options": ["2 years", "6 years", "8 years", "12 years"], "answer": 1, "graded": true}, {"n": 23, "q": "Who is one of your state’s U.S. senators now?", "options": ["Chuck Grassley", "Zach Nunn", "Tom Harkin", "Ashley Hinson"], "answer": 0, "graded": true}, {"n": 24, "q": "How many voting members are in the House of Representatives?", "options": ["9", "50", "100", "435"], "answer": 3, "graded": true}, {"n": 25, "q": "How long is a term for a member of the House of Representatives?", "options": ["2 years", "4 years", "6 years", "12 years"], "answer": 0, "graded": true}, {"n": 26, "q": "Why do U.S. representatives serve shorter terms than U.S. senators?", "options": ["To ensure there are always new members in Congress", "To more closely follow public opinion", "To balance the number of people up for election", "To make voting easier"], "answer": 1, "graded": true}, {"n": 27, "q": "How many senators does each state have?", "options": ["2", "3", "4", "Depends on the population of the state"], "answer": 0, "graded": true}, {"n": 28, "q": "Why does each state have two senators?", "options": ["To make sure large states have more power in Congress", "Equal representation for smaller states", "To ensure there are a certain number of senators in the U.S. Senate", "To make sure every branch of government has equal members"], "answer": 1, "graded": true}, {"n": 29, "q": "Name your U.S. Representative.", "options": [], "answer": null, "graded": false}, {"n": 30, "q": "What is the name of the Speaker of the House of Representatives now?", "options": ["Nancy Pelosi", "Mike Johnson", "John Boehner", "Paul Ryan"], "answer": 1, "graded": true}, {"n": 31, "q": "Who does a U.S. senator represent?", "options": ["People of their state", "A region of their state", "A region of the U.S.", "All of the above"], "answer": 0, "graded": true}, {"n": 32, "q": "Who elects U.S. senators?", "options": ["The Governor of the state", "Citizens from their state", "District court judges", "Members of the House of Representatives"], "answer": 1, "graded": true}, {"n": 33, "q": "Who does a member of the House of Representatives represent?", "options": ["People from their congressional district", "People from a specific state", "People across the United States", "People who live in the District of Columbia (D.C.)"], "answer": 0, "graded": true}, {"n": 34, "q": "Who elects members of the House of Representatives?", "options": ["Only people from specific states", "People across the United States", "Citizens from their congressional district", "People who live in the District of Columbia (D.C.)"], "answer": 2, "graded": true}, {"n": 35, "q": "Some states have more representatives than other states. Why?", "options": ["Because they are geographically larger than others", "Because of the state's population", "Because they are required to pay more federal taxes than others", "Because they joined the United States earlier than others"], "answer": 1, "graded": true}, {"n": 36, "q": "The President of the United States is elected for how many years?", "options": ["2", "4", "6", "8"], "answer": 1, "graded": true}, {"n": 37, "q": "The President of the United States can serve only two terms. Why?", "options": ["Because of the 21st Amendment", "Because of the 22nd Amendment", "Because it says so in the U.S. Constitution", "Because the Framers wanted to limit the president’s powers"], "answer": 1, "graded": true}, {"n": 38, "q": "What is the name of the President of the United States now?", "options": ["Donald Trump", "George W. Bush", "Barack Obama", "Joe Biden"], "answer": 0, "graded": true}, {"n": 39, "q": "What is the name of the Vice President of the United States now?", "options": ["Tim Kaine", "Kamala Harris", "Joe Biden", "JD Vance"], "answer": 3, "graded": true}, {"n": 40, "q": "If the president can no longer serve, who becomes president?", "options": ["The Secretary of State", "The Speaker of the House", "The Vice President", "The First Lady"], "answer": 2, "graded": true}, {"n": 41, "q": "Name one power of the president.", "options": ["Signs bills into law", "Vetoes bills", "Enforces laws", "All of the above"], "answer": 3, "graded": true}, {"n": 42, "q": "Who is the Commander in Chief of the military?", "options": ["The President", "The Vice President", "The Secretary of Defense", "The Chief of Staff"], "answer": 0, "graded": true}, {"n": 43, "q": "Who signs bills to become laws?", "options": ["The President", "The Vice President", "The Secretary of Commerce", "The Senate Majority Leader"], "answer": 0, "graded": true}, {"n": 44, "q": "Who vetoes bills?", "options": ["The Speaker of the House", "The Vice President", "The First Lady", "The President"], "answer": 3, "graded": true}, {"n": 45, "q": "Who appoints federal judges?", "options": ["The Speaker of the House", "The President", "The Vice President", "The President’s Cabinet"], "answer": 1, "graded": true}, {"n": 46, "q": "The executive branch has many parts. Name one.", "options": ["Congress", "Cabinet", "District courts", "Governors of each state"], "answer": 1, "graded": true}, {"n": 47, "q": "What does the President’s Cabinet do?", "options": ["Veto laws", "Give money to the President", "Advises the President", "Make laws"], "answer": 2, "graded": true}, {"n": 48, "q": "What are two Cabinet-level positions?", "options": ["Secretary of State and Secretary of Education", "Secretary of Education and Secretary of Homeland Security", "Attorney General and Secretary of Agriculture", "All of the above"], "answer": 3, "graded": true}, {"n": 49, "q": "Why is the Electoral College important?", "options": ["It decides on who is elected president", "It writes and approves new federal laws", "It protects small states", "It decides cases about the Constitution"], "answer": 0, "graded": true}, {"n": 50, "q": "What is one part of the judicial branch?", "options": ["Supreme Court and Federal Courts", "Federal and State Courts", "Supreme Court and State Courts", "State and District Courts"], "answer": 0, "graded": true}, {"n": 51, "q": "What does the judicial branch do?", "options": ["Authorizes military action", "Decides if a law goes against the U.S. Constitution", "Write and pass new legislation", "Serve as local law enforcement"], "answer": 1, "graded": true}, {"n": 52, "q": "What is the highest court in the United States?", "options": ["The State Supreme Court", "The Federal Court", "Military tribunals", "The Supreme Court"], "answer": 3, "graded": true}, {"n": 53, "q": "How many seats are on the Supreme Court?", "options": ["6", "9", "15", "18"], "answer": 1, "graded": true}, {"n": 54, "q": "How many Supreme Court justices are usually needed to decide a case?", "options": ["3", "5", "7", "9"], "answer": 1, "graded": true}, {"n": 55, "q": "How long do Supreme Court justices serve?", "options": ["For 10 years", "For 25 years", "For 30 years", "For life"], "answer": 3, "graded": true}, {"n": 56, "q": "Supreme Court justices serve for life. Why?", "options": ["To limit outside political influence", "To limit the need to appoint new justices", "To limit presidential power", "Because that’s what was stated in the Declaration of Independence"], "answer": 0, "graded": true}, {"n": 57, "q": "Who is the Chief Justice of the United States now?", "options": ["Antonin Scalia", "Sandra Day O’Connor", "John Roberts", "Sonia Sotomayor"], "answer": 2, "graded": true}, {"n": 58, "q": "Name one power that is only for the federal government.", "options": ["Provide schooling and education", "Declare war", "Provide safety", "Approve land use"], "answer": 1, "graded": true}, {"n": 59, "q": "Name one power that is only for the states.", "options": ["Create an army", "Make treaties", "Print money", "Give a driver’s license"], "answer": 3, "graded": true}, {"n": 60, "q": "What is the purpose of the 10th Amendment?", "options": ["It states that the powers not given to the federal government belong to the states or to the people", "It states that the government can’t force you to testify against yourself", "It protects people from unreasonable searches and seizures", "It prohibits the quartering of soldiers in private homes"], "answer": 0, "graded": true}, {"n": 61, "q": "Who is the governor of your state now?", "options": ["Kim Reynolds", "Terry Branstad", "Donald Trump", "Robert Ray"], "answer": 0, "graded": true}, {"n": 62, "q": "What is the capital of your state?", "options": ["Burlington", "Des Moines", "Iowa City", "Sioux City"], "answer": 1, "graded": true}, {"n": 63, "q": "There are four amendments to the Constitution about who can vote. Describe one of them.", "options": ["Voting can only occur in April and November.", "Citizens 18 and older can vote.", "Naturalized citizens cannot vote in federal elections.", "To vote, you must pay a tax (a poll tax)."], "answer": 1, "graded": true, "section": "American Government Part C: Rights and Responsibilities"}, {"n": 64, "q": "Who can vote in federal elections, run for federal office, and serve on a jury in the United States?", "options": ["U.S. citizens", "Anyone living in the United States", "Anyone who would like to vote", "Only those born in the United States"], "answer": 0, "graded": true}, {"n": 65, "q": "What are three rights of everyone living in the United States?", "options": ["Right to pursue happiness, right to succeed and freedom of expression", "Freedom of speech, freedom of assembly and freedom to petition the government", "Right to a job, freedom of expression and freedom to petition the government", "Freedom of religion, right to bear arms, and right to health care"], "answer": 1, "graded": true}, {"n": 66, "q": "What do we show loyalty to when we say the Pledge of Allegiance?", "options": ["The President", "The Congress", "The U.S. Military", "The flag of the United States"], "answer": 3, "graded": true}, {"n": 67, "q": "Name two promises that new citizens make in the Oath of Allegiance.", "options": ["Give up loyalty to other countries and defend the U.S. Constitution", "Defend the U.S. Constitution and volunteer in your local community", "Obey the laws of the United States and engage in mandatory military service", "Vote in every election and defend the U.S. Constitution"], "answer": 0, "graded": true}, {"n": 68, "q": "How can people become United States citizens?", "options": ["Naturalize or be born in the United States", "Pay a lot of money", "Serve in the military for one year", "By voting in a national election"], "answer": 0, "graded": true}, {"n": 69, "q": "What are two examples of civic participation in the United States?", "options": ["Vote or run for office", "Join a political party or help with a campaign", "Join a civic or community group", "All of the above"], "answer": 3, "graded": true}, {"n": 70, "q": "What is one way Americans can serve their country?", "options": ["Visiting the nation’s capital", "Watching the news everyday", "Being good neighbors in their community", "Voting"], "answer": 3, "graded": true}, {"n": 71, "q": "Why is it important to pay federal taxes?", "options": ["Required by law", "To be able to decide who becomes president", "To be able to vote", "To be able to support the ideals of the country"], "answer": 0, "graded": true}, {"n": 72, "q": "It is important for all men age 18 through 25 to register for the Selective Service. Name one reason why.", "options": ["Can’t go to postsecondary programs without registering", "Required by law", "Can’t vote without registering", "Must pay higher taxes if you don’t register"], "answer": 1, "graded": true}, {"n": 73, "q": "The colonists came to America for many reasons. Name one.", "options": ["Avoid taxes", "Health care", "Religious freedom", "Education"], "answer": 2, "graded": true, "section": "American History Part A: Colonial Period and Independence"}, {"n": 74, "q": "Who lived in America before the Europeans arrived?", "options": ["The English", "Native Americans", "The French", "Vikings"], "answer": 1, "graded": true}, {"n": 75, "q": "What group of people was taken and sold as slaves?", "options": ["People from India", "People from Northern Europe", "People from Africa", "People from Australia"], "answer": 2, "graded": true}, {"n": 76, "q": "What war did Americans fight to win independence from Britain?", "options": ["The French and Indian War", "The American Revolution", "The War of 1812", "The Civil War"], "answer": 1, "graded": true}, {"n": 77, "q": "Name one reason why the Americans declared independence from Britain.", "options": ["Taxation without representation", "Because they wanted a new King", "Because the British invaded France", "They wanted control of British land"], "answer": 0, "graded": true}, {"n": 78, "q": "Who wrote the Declaration of Independence?", "options": ["Benjamin Franklin", "John Hancock", "Thomas Jefferson", "George Washington"], "answer": 2, "graded": true}, {"n": 79, "q": "When was the Declaration of Independence adopted?", "options": ["April 15, 1776", "July 4, 1776", "September 17, 1789", "December 7, 1941"], "answer": 1, "graded": true}, {"n": 80, "q": "The American Revolution had many important events. Name one.", "options": ["Adoption of the U.S. Constitution", "Declaration of Independence", "Battle of Gettysburg", "Shays’ Rebellion"], "answer": 1, "graded": true}, {"n": 81, "q": "There were 13 original states. Name five.", "options": ["Vermont, Maryland, Florida, Utah, Connecticut", "Maine, New Hampshire, Vermont, Ohio, Missouri", "New York, Virginia, South Carolina, Georgia, Massachusetts", "Massachusetts, California, New York, Rhode Island, Illinois"], "answer": 2, "graded": true}, {"n": 82, "q": "What founding document was written in 1787?", "options": ["The Mayflower Compact", "The Declaration of Independence", "The Articles of Confederation", "The U.S. Constitution"], "answer": 3, "graded": true}, {"n": 83, "q": "The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.", "options": ["Ben Franklin", "John Hancock", "James Madison", "George Washington"], "answer": 2, "graded": true}, {"n": 84, "q": "Why were the Federalist Papers important?", "options": ["They supported passing the U.S. Constitution", "They supported declaring independence from Britain", "They supported adopting the Articles of Confederation", "They supported the federal regulation of money"], "answer": 0, "graded": true}, {"n": 85, "q": "Benjamin Franklin is famous for many things. Name one.", "options": ["Fourth president of the United States", "Governor of Virginia", "Fought in a famous battle during the American Revolution", "U.S. diplomat"], "answer": 3, "graded": true}, {"n": 86, "q": "George Washington is famous for many things. Name one.", "options": ["First president of the United States", "U.S. diplomat", "Writer of the Declaration of Independence", "President during the Civil War"], "answer": 0, "graded": true}, {"n": 87, "q": "Thomas Jefferson is famous for many things. Name one.", "options": ["President during the American Revolution", "Crossing the Delaware during the American Revolution", "Writer of the Declaration of Independence", "General of the Continental Army"], "answer": 2, "graded": true}, {"n": 88, "q": "James Madison is famous for many things. Name one.", "options": ["First president of the United States", "“Father of the Constitution”", "Writer of the Anti-Federalist papers", "First Secretary of State"], "answer": 1, "graded": true}, {"n": 89, "q": "Alexander Hamilton is famous for many things. Name one.", "options": ["One of the writers of the Federalist Papers", "Famous general in the American Revolution", "Helped write the Declaration of Independence", "Third president of the United States"], "answer": 0, "graded": true}, {"n": 90, "q": "What territory did the United States buy from France in 1803?", "options": ["Louisiana Territory", "Alaska", "Canada", "The Northwest Territory"], "answer": 0, "graded": true, "section": "American History Part B: 1800s"}, {"n": 91, "q": "Name one war fought by the United States in the 1800s.", "options": ["The Korean War", "World War II", "The Spanish-American War", "The American Revolution"], "answer": 2, "graded": true}, {"n": 92, "q": "Name the U.S. war between the North and the South.", "options": ["The Spanish-American War", "The Civil War", "The French and Indian War", "The American Revolution"], "answer": 1, "graded": true}, {"n": 93, "q": "The Civil War had many important events. Name one.", "options": ["Battle of Bunker Hill", "Emancipation Proclamation", "Battle of Yorktown", "Adoption of the U.S. Constitution"], "answer": 1, "graded": true}, {"n": 94, "q": "Abraham Lincoln is famous for many things. Name one.", "options": ["Facilitated the Louisiana Purchase", "President of the United States during the War of 1812", "Supported the Missouri Compromise", "Led the United States during the Civil War"], "answer": 3, "graded": true}, {"n": 95, "q": "What did the Emancipation Proclamation do?", "options": ["Ended World War II", "Created border states", "Freed slaves in the Confederate States", "Ended the American Revolution"], "answer": 2, "graded": true}, {"n": 96, "q": "What U.S. war ended slavery?", "options": ["The War of 1812", "The Civil War", "The Spanish-American War", "World War I"], "answer": 1, "graded": true}, {"n": 97, "q": "What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?", "options": ["1st Amendment", "4th Amendment", "14th Amendment", "19th Amendment"], "answer": 2, "graded": true}, {"n": 98, "q": "When did all men get the right to vote?", "options": ["1870", "1872", "1875", "1877"], "answer": 0, "graded": true}, {"n": 99, "q": "Name one leader of the women’s rights movement in the 1800s.", "options": ["Jeanette Rankin", "Elizabeth Cady Stanton", "Eleanor Roosevelt", "Rosa Parks"], "answer": 1, "graded": true}, {"n": 100, "q": "Name one war fought by the United States in the 1900s.", "options": ["The French and Indian War", "The American Revolution", "The Civil War", "World War II"], "answer": 3, "graded": true, "section": "American History Part C: Recent American History and Other Important Historical Information"}, {"n": 101, "q": "Why did the United States enter World War I?", "options": ["Because Japan attacked the United States", "To support Allied Powers (England, France, Italy, and Russia)", "Because of the attack on Archduke Franz Ferdinand", "Because of the sinking of the Lusitania"], "answer": 1, "graded": true}, {"n": 102, "q": "When did all women get the right to vote?", "options": ["1920", "1921", "1922", "1923"], "answer": 0, "graded": true}, {"n": 103, "q": "What was the Great Depression?", "options": ["A time of deep sorrow for the United States, following the attacks on Pearl Harbor", "Longest economic recession in modern history", "Work to reconstruct the country after the Civil War", "A time when workers protested working conditions"], "answer": 1, "graded": true}, {"n": 104, "q": "When did the Great Depression start?", "options": ["Battle of Fort Sumter in 1861", "Reconstruction period of 1865", "Stock market crash of 1929", "Bombing of Pearl Harbor on December 7, 1941"], "answer": 2, "graded": true}, {"n": 105, "q": "Who was president during the Great Depression and World War II?", "options": ["Thomas Jefferson", "Bill Clinton", "Franklin Roosevelt", "Ronald Reagan"], "answer": 2, "graded": true}, {"n": 106, "q": "Why did the United States enter World War II?", "options": ["Bombing of Pearl Harbor", "Hitler’s invasion of Poland in 1939", "Concern over an increase of fascism around the world", "Arguments with Japanese emperor Hirohito"], "answer": 0, "graded": true}, {"n": 107, "q": "Dwight Eisenhower is famous for many things. Name one.", "options": ["General during World War I", "General during World War II", "President during World War I", "President during World War II"], "answer": 1, "graded": true}, {"n": 108, "q": "Who was the United States’ main rival during the Cold War?", "options": ["Soviet Union", "Italy", "Germany", "Cuba"], "answer": 0, "graded": true}, {"n": 109, "q": "During the Cold War, what was one main concern of the United States?", "options": ["Socialism", "Economic downturn", "Communism", "Rise of dictators"], "answer": 2, "graded": true}, {"n": 110, "q": "Why did the United States enter the Korean War?", "options": ["To stop the spread of communism", "To stop the spread of socialism", "To prevent the economic collapse of Korea", "To prevent expansion of nuclear weapons"], "answer": 0, "graded": true}, {"n": 111, "q": "Why did the United States enter the Vietnam War?", "options": ["To stop the spread of communism", "To stop the spread of socialism", "To prevent the economic collapse of Vietnam", "To prevent expansion of nuclear weapons"], "answer": 0, "graded": true}, {"n": 112, "q": "What did the civil rights movement do?", "options": ["Fought to expand women’s rights", "Fought to expand worker’s rights", "Fought to end racial discrimination", "Fought to ensure fairness in housing"], "answer": 2, "graded": true}, {"n": 113, "q": "Martin Luther King, Jr. is famous for many things. Name one.", "options": ["Fought for women’s right to vote", "Fought for worker’s rights", "Fought for a higher minimum wage", "Fought for civil rights"], "answer": 3, "graded": true}, {"n": 114, "q": "Why did the United States enter the Persian Gulf War?", "options": ["To overthrow the ruler of Iraq", "To force the Iraqi military from Kuwait", "To ensure democracy spread to the Middle East", "Because the United States was attacked by Iraq"], "answer": 1, "graded": true}, {"n": 115, "q": "What major event happened on September 11, 2001 in the United States?", "options": ["Terrorists attacked the United States", "President Kennedy was assassinated", "The Stock Market crashed", "Hurricane Katrina hit New Orleans"], "answer": 0, "graded": true}, {"n": 116, "q": "Name one U.S. military conflict after the September 11, 2001 attacks.", "options": ["Battle of Inchon", "Tet Offensive", "Desert Storm", "Global War on Terror"], "answer": 3, "graded": true}, {"n": 117, "q": "Name one American Indian tribe in the United States.", "options": ["Apache", "Cherokee", "Navajo", "All of the above"], "answer": 3, "graded": true}, {"n": 118, "q": "Name one example of an American innovation.", "options": ["Airplane", "Light bulb", "Assembly line", "All of the above"], "answer": 3, "graded": true}, {"n": 119, "q": "What is the capital of the United States?", "options": ["Washington, DC", "New York, NY", "Philadelphia, PA", "Boston, MA"], "answer": 0, "graded": true, "section": "Symbols and Holidays Part A: Symbols"}, {"n": 120, "q": "Where is the Statue of Liberty?", "options": ["New York Harbor", "Niagara Falls", "Chesapeake Bay", "Boston Harbor"], "answer": 0, "graded": true}, {"n": 121, "q": "Why does the flag have 13 stripes?", "options": ["Because there were 13 signers of the Declaration of Independence", "Because the Founding Fathers came from 13 different countries", "Because there were 13 original colonies", "Because there were 13 Founding Fathers"], "answer": 2, "graded": true}, {"n": 122, "q": "Why does the flag have 50 stars?", "options": ["Because there is one for each colony", "Because there is one for each original signer of the Constitution", "Because there is one for each Founding Father", "Because there is one for each state"], "answer": 3, "graded": true}, {"n": 123, "q": "What is the name of the national anthem?", "options": ["Land of the Free", "Coming to America", "The Star-Spangled Banner", "America the Beautiful"], "answer": 2, "graded": true}, {"n": 124, "q": "The Nation’s first motto was “E Pluribus Unum.” What does that mean?", "options": ["The pursuit of happiness", "Out of many, one", "Liberty and justice for all", "Freedom for all"], "answer": 1, "graded": true}, {"n": 125, "q": "What is Independence Day?", "options": ["The country’s birthday", "The day the U.S. Constitution was signed", "The day the colonists defeated the British", "None of the above"], "answer": 0, "graded": true}, {"n": 126, "q": "Name three national U.S. holidays.", "options": ["Labor Day, Arbor Day, and President Lincoln’s Birthday", "Memorial Day, Valentine’s Day, and Arbor Day", "Thanksgiving, Groundhog’s Day, and President Kennedy’s Birthday", "Veterans Day, Independence Day, and Martin Luther King, Jr. Day"], "answer": 3, "graded": true}, {"n": 127, "q": "What is Memorial Day?", "options": ["A holiday to honor active duty U.S. military personnel", "A holiday to remember sacrifices the U.S. has made in past wars", "A holiday to honor soldiers who died in military service", "A holiday to honor ancestors"], "answer": 2, "graded": true}, {"n": 128, "q": "What is Veterans Day?", "options": ["A holiday to honor people who have served in the U.S. military", "A holiday to remember the sacrifices the U.S. has made in past wars", "A holiday to honor those who have died during active military service", "A holiday to honor ancestors"], "answer": 0, "graded": true}];
+const PASS = 60;
+let order = questions.map((_,i)=>i);
+let current = 0;
+let selections = {};
+let correct = 0;
+let gradedAnswered = new Set();
+let shuffleMode = false;
+let learningMode = false;
+
+function shuffledOrder(){
+  const arr = questions.map((_,i)=>i);
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function updateModeUI(){
+  const btn=document.getElementById('shuffleBtn');
+  const hint=document.getElementById('modeHint');
+  if(learningMode){
+    btn.textContent='🧠 Learning Mode';
+    hint.textContent='Explanations are shown after each answer';
+  }else if(shuffleMode){
+    btn.textContent='🔢 Use Original Order';
+    hint.textContent='Shuffle mode: questions are randomized';
+  }else{
+    btn.textContent='🔀 Shuffle Questions';
+    hint.textContent='Original question order';
+  }
+}
+
+function resetQuiz(){
+  current=0; selections={}; correct=0; gradedAnswered=new Set();
+  order=shuffleMode ? shuffledOrder() : questions.map((_,i)=>i);
+  document.getElementById('result').style.display='none';
+  document.getElementById('quizArea').style.display='block';
+  updateModeUI();
+  render();
+}
+
+function escapeHtml(value){
+  return String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const acceptedAnswers = {
+  73:['Freedom','Political liberty','Religious freedom','Economic opportunity','Escape persecution'],
+  74:['American Indians','Native Americans'],
+  75:['Africans','People from Africa'],
+  76:['American Revolution','The (American) Revolutionary War','War for (American) Independence'],
+  77:['High taxes','Taxation without representation','British soldiers stayed in Americans’ houses (boarding, quartering)','They did not have self-government','Boston Massacre','Boston Tea Party (Tea Act)','Stamp Act','Sugar Act','Townshend Acts','Intolerable (Coercive) Acts'],
+  80:['(Battle of) Bunker Hill','Declaration of Independence','Washington Crossing the Delaware (Battle of Trenton)','(Battle of) Saratoga','Valley Forge (Encampment)','(Battle of) Yorktown (British surrender at Yorktown)'],
+  81:['New Hampshire','Massachusetts','Rhode Island','Connecticut','New York','New Jersey','Pennsylvania','Delaware','Maryland','Virginia','North Carolina','South Carolina','Georgia'],
+  83:['(James) Madison','(Alexander) Hamilton','John Jay','Publius'],
+  84:['They helped people understand the (U.S.) Constitution.','They supported passing the (U.S.) Constitution.'],
+  85:['Founded the first free public libraries','First Postmaster General of the United States','Helped write the Declaration of Independence','Inventor','U.S. diplomat'],
+  86:['“Father of Our Country”','First president of the United States','General of the Continental Army','President of the Constitutional Convention'],
+  87:['Writer of the Declaration of Independence','Third president of the United States','Doubled the size of the United States (Louisiana Purchase)','First Secretary of State','Founded the University of Virginia','Writer of the Virginia Statute on Religious Freedom'],
+  88:['“Father of the Constitution”','Fourth president of the United States','President during the War of 1812','One of the writers of the Federalist Papers'],
+  89:['First Secretary of the Treasury','One of the writers of the Federalist Papers','Helped establish the First Bank of the United States','Aide to General George Washington','Member of the Continental Congress'],
+  90:['Louisiana Territory','Louisiana'],
+  91:['War of 1812','Mexican-American War','Civil War','Spanish-American War'],
+  93:['(Battle of) Fort Sumter','Emancipation Proclamation','(Battle of) Vicksburg','(Battle of) Gettysburg','Sherman’s March','(Surrender at) Appomattox','(Battle of) Antietam/Sharpsburg','Lincoln was assassinated'],
+  94:['Freed the slaves (Emancipation Proclamation)','Saved (or preserved) the Union','Led the United States during the Civil War','16th president of the United States','Delivered the Gettysburg Address'],
+  95:['Freed the slaves','Freed slaves in the Confederacy','Freed slaves in the Confederate states','Freed slaves in most Southern states'],
+  96:['The Civil War'],
+  97:['14th Amendment'],
+  98:['After the Civil War','During Reconstruction','(With the) 15th Amendment','1870'],
+  99:['Susan B. Anthony','Elizabeth Cady Stanton','Sojourner Truth','Harriet Tubman','Lucretia Mott','Lucy Stone'],
+  100:['World War I','World War II','Korean War','Vietnam War','(Persian) Gulf War'],
+  101:['Because Germany attacked U.S. (civilian) ships','To support the Allied Powers (England, France, Italy, and Russia)','To oppose the Central Powers (Germany, Austria-Hungary, the Ottoman Empire, and Bulgaria)'],
+  102:['1920','After World War I','(With the) 19th Amendment'],
+  103:['Longest economic recession in modern history'],
+  104:['The Great Crash (1929)','Stock market crash of 1929'],
+  106:['(Bombing of) Pearl Harbor','Japanese attacked Pearl Harbor','To support the Allied Powers (England, France, and Russia)','To oppose the Axis Powers (Germany, Italy, and Japan)'],
+  107:['General during World War II','President at the end of (during) the Korean War','34th president of the United States','Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)'],
+  108:['Soviet Union','USSR','Russia'],
+  117:['Apache','Blackfeet','Cayuga','Cherokee','Cheyenne','Chippewa','Choctaw','Creek','Crow','Hopi','Huron','Inupiat','Lakota','Mohawk','Mohegan','Navajo','Oneida','Onondaga','Pueblo','Seminole','Seneca','Shawnee','Sioux','Teton','Tuscarora'],
+  118:['Light bulb','Automobile (cars, internal combustion engine)','Skyscrapers','Airplane','Assembly line','Landing on the moon','Integrated circuit (IC)'],
+  120:['New York (Harbor)','Liberty Island','New Jersey','Near New York City','On the Hudson (River)'],
+  121:['(Because there were) 13 original colonies','(Because the stripes) represent the original colonies'],
+  122:['(Because there is) one star for each state','(Because) each star represents a state','(Because there are) 50 states'],
+  124:['Out of many, one','We all become one'],
+  125:['A holiday to celebrate U.S. independence (from Britain)','The country’s birthday'],
+  126:['New Year’s Day','Martin Luther King, Jr. Day','Presidents Day (Washington’s Birthday)','Memorial Day','Independence Day','Labor Day','Columbus Day','Veterans Day','Thanksgiving Day','Christmas Day'],
+  127:['A holiday to honor soldiers who died in military service'],
+  128:['A holiday to honor people in the (U.S.) military','A holiday to honor people who have served (in the U.S. military)']
+};
+
+const learningInfo = {
+  1:{why:'The United States can accurately be described as a republic, a Constitution-based federal republic, and a representative democracy. Because the question asks for the form of government and all three descriptions are represented in the choices, “All of the above” is the complete answer.',matter:'These terms describe how political power is organized: the Constitution structures government, federalism divides power between national and state governments, and representative democracy means people choose representatives to govern.',remember:'Think: republic + federal Constitution + representative democracy = all three descriptions.'},
+  2:{why:'The Constitution is the supreme law of the land. It establishes the framework of the federal government and sets rules that other laws and government actions must follow.',matter:'The idea of a supreme law is central to constitutional government: government officials are also bound by the Constitution.',remember:'Supreme law = Constitution.'},
+  3:{why:'The Constitution defines the powers and structure of the federal government. It does not simply write ordinary laws; it creates the framework in which lawmakers, presidents, and courts operate.',matter:'Knowing the Constitution’s functions helps explain why the branches have different powers and limits.',remember:'Constitution = creates and organizes government.'},
+  4:{why:'“We the People” expresses popular sovereignty: government gets its authority from the people, or the consent of the governed.',matter:'This is a foundational democratic principle because legitimate government depends on the people’s authority.',remember:'We the People → consent of the governed.'},
+  5:{why:'Changes to the Constitution are made through the amendment process, which has special procedures rather than an ordinary law or court decision.',matter:'The amendment process allows the Constitution to change while making changes difficult enough to preserve stability.',remember:'Constitution changes = amendment process.'},
+  6:{why:'The Bill of Rights protects basic rights of people living in the United States, including important freedoms and protections from government abuse.',matter:'These protections help define the relationship between individuals and government.',remember:'Bill of Rights = basic rights.'},
+  7:{why:'There are 27 amendments to the U.S. Constitution. The first ten are the Bill of Rights.',matter:'Amendments show how the Constitution can be changed to address important national questions.',remember:'10 Bill of Rights + 17 later amendments = 27.'},
+  8:{why:'The Declaration of Independence is important because it states that people are created equal and sets out ideas about natural rights and legitimate government. It also announced the colonies’ separation from Britain.',matter:'It helps explain the founding-era ideas that influenced American government.',remember:'Declaration = independence + equality + natural rights.'},
+  9:{why:'The Declaration of Independence announced that the American colonies were free from Britain.',matter:'It marked the formal political break that led to the United States becoming an independent nation.',remember:'Free from Britain? → Declaration of Independence.'},
+  10:{why:'Liberty and natural rights are important ideas in both the Declaration of Independence and the constitutional tradition. The question asks for two ideas, so a response must provide two concepts.',matter:'These ideas help explain why American government is designed to protect individual freedom and rights.',remember:'Think rights + liberty when asked for founding ideas.'},
+  11:{why:'“Life, Liberty, and the pursuit of Happiness” appears in the Declaration of Independence and expresses the idea of natural rights.',matter:'It is one of the best-known statements of the founding era’s ideas about individual rights.',remember:'Life, Liberty, Happiness → Declaration.'},
+  12:{why:'The study guide identifies a capitalist or free-market economy. In this system, people and businesses generally make economic decisions through markets and private ownership.',matter:'The economic system is part of the broader civic system people are expected to understand as citizens.',remember:'Capitalist = free-market economy.'},
+  13:{why:'The rule of law means no one is above the law, leaders must obey the law, and everyone must follow the law. Since all three statements are correct, “All of the above” is complete.',matter:'Rule of law limits arbitrary power and means government operates under established law.',remember:'No one above it; leaders obey it; everyone follows it.'},
+  14:{why:'The Declaration of Independence influenced the Constitution by contributing important founding principles and ideas about government and rights.',matter:'Founding documents did not appear in isolation; later constitutional ideas grew from earlier political experience and documents.',remember:'Declaration → one of the documents that influenced the Constitution.'},
+  15:{why:'The three branches divide government power so that each branch can check the others. This is called checks and balances.',matter:'Checks and balances help prevent too much power from being concentrated in one part of government.',remember:'Three branches → checks and balances.'},
+  16:{why:'The three branches are legislative, executive, and judicial. Congress is legislative, the President leads the executive branch, and the courts make up the judicial branch.',matter:'Dividing government into branches creates separate roles and limits concentrated power.',remember:'LEJ: Legislative, Executive, Judicial.'},
+  17:{why:'The President leads the executive branch. The executive branch carries out and enforces federal laws.',matter:'This helps distinguish the President’s role from Congress’s lawmaking role and the courts’ judicial role.',remember:'President → Executive.'},
+  18:{why:'Congress writes federal laws. Congress is the legislative branch and consists of the Senate and House of Representatives.',matter:'Understanding who makes laws is essential for understanding how a bill becomes federal law.',remember:'Congress = legislative = makes laws.'},
+  19:{why:'Congress has two chambers: the Senate and the House of Representatives.',matter:'The two-chamber structure is called a bicameral legislature and is a central feature of the federal lawmaking process.',remember:'Congress = Senate + House.'},
+  20:{why:'Congress has many powers, including the constitutional power to declare war. The other listed choices belong to different parts of government.',matter:'Knowing congressional powers helps explain the separation of powers between Congress and the President.',remember:'Congress can declare war.'},
+  21:{why:'There are 100 U.S. senators because each of the 50 states has two senators.',matter:'Equal state representation in the Senate is one of the defining features of the federal system.',remember:'50 states × 2 senators = 100.'},
+  22:{why:'A U.S. senator serves a six-year term.',matter:'Longer Senate terms are part of the constitutional design of the Senate.',remember:'Senator = 6 years.'},
+  23:{why:'For Iowa, one current U.S. senator is Chuck Grassley, the answer used by this question bank.',matter:'Senators represent an entire state, so Iowa voters have statewide representation in the Senate.',remember:'Iowa senator in this quiz = Chuck Grassley.'},
+  24:{why:'The House has 435 voting members. Seats are apportioned among states based largely on population.',matter:'House representation is designed to reflect population differences among states.',remember:'House voting members = 435.'},
+  25:{why:'A member of the House of Representatives serves a two-year term.',matter:'Frequent elections keep House members closely connected to voters.',remember:'House = 2 years.'},
+  26:{why:'House members serve shorter terms so they can respond more closely to public opinion. Senators serve six-year terms.',matter:'The different terms are part of the different roles and constitutional designs of the two chambers.',remember:'House = closer to current public opinion; Senate = longer term.'},
+  27:{why:'Every state has two senators, regardless of population.',matter:'This gives every state equal representation in the Senate.',remember:'Every state → 2 senators.'},
+  28:{why:'Each state has two senators to provide equal state representation in the Senate. Saying “equal representation for smaller states” points toward the idea but is incomplete because every state receives the same two senators.',matter:'This is one of the constitutional compromises that balances population-based House representation with equal state representation in the Senate.',remember:'Senate = equal states; House = population.'},
+  29:{why:'This is a self-check question. Your U.S. Representative depends on your congressional district, so the quiz should not invent or supply a universal answer.',matter:'House members represent specific congressional districts, making this a location- and election-dependent question.',remember:'Representative = your district’s current U.S. House member.',current:true},
+  30:{why:'The question bank uses Mike Johnson as the current Speaker of the House.',matter:'The Speaker is chosen by the House and presides over the House of Representatives.',remember:'Speaker question → check the current officeholder.',current:true},
+  31:{why:'A U.S. senator represents the people of the entire state. Senators do not represent only one congressional district.',matter:'This illustrates the difference between Senate representation and House district representation.',remember:'Senator = whole state.'},
+  32:{why:'U.S. senators are elected by voters in their state. The 17th Amendment established direct election of senators by the people.',matter:'Direct election connects senators to the voters of the entire state they represent.',remember:'Voters elect senators.'},
+  33:{why:'A House member represents people in that member’s congressional district.',matter:'House districts divide a state into geographic areas for representation in the House.',remember:'Representative = district.'},
+  34:{why:'Citizens in a congressional district elect their U.S. House representative.',matter:'This is how voters choose the person who represents their district in Congress.',remember:'Your district elects your representative.'},
+  35:{why:'States with larger populations generally have more House representatives because House seats are apportioned by population.',matter:'This creates population-based representation in the House while the Senate gives every state two senators.',remember:'House seats → population.'},
+  36:{why:'The President is elected to a four-year term.',matter:'The four-year presidential term is part of the constitutional structure of the executive branch.',remember:'President = 4 years.'},
+  37:{why:'The 22nd Amendment limits a person to being elected President no more than twice, with constitutional details about succession.',matter:'Constitutional amendments can place limits on government offices and how power is exercised.',remember:'22nd Amendment → presidential term limit.'},
+  38:{why:'The question bank uses Donald Trump as the current President.',matter:'The presidency is an elected office, so the answer can change after elections.',remember:'President questions are current-information questions.',current:true},
+  39:{why:'The question bank uses JD Vance as the current Vice President.',matter:'The Vice President is the first person in the presidential line of succession and also serves as President of the Senate.',remember:'VP questions are current-information questions.',current:true},
+  40:{why:'If the President can no longer serve, the Vice President becomes President under the presidential succession rules.',matter:'Succession provides continuity of executive leadership.',remember:'President unavailable → Vice President.'},
+  41:{why:'The President has several powers, including signing bills, vetoing bills, and enforcing laws. Because all three listed powers are presidential powers, “All of the above” is complete.',matter:'Presidential powers are part of the executive branch’s role in carrying out federal law.',remember:'President: signs, vetoes, enforces.'},
+  42:{why:'The President is Commander in Chief of the U.S. military.',matter:'The Constitution assigns the President an important military leadership role while Congress has important powers over war and funding.',remember:'Commander in Chief → President.'},
+  43:{why:'The President signs bills into law. A bill passed by Congress generally becomes law when the President signs it, subject to constitutional procedures including vetoes and overrides.',matter:'This shows how the legislative and executive branches interact in the lawmaking process.',remember:'Congress passes; President signs or vetoes.'},
+  44:{why:'The President can veto bills passed by Congress.',matter:'The veto is an executive check on legislative action and is part of the system of checks and balances.',remember:'Veto → President.'},
+  45:{why:'The President nominates federal judges, with Senate confirmation required for federal judicial appointments.',matter:'The appointment process connects the executive and legislative branches and helps shape the federal judiciary.',remember:'President nominates; Senate confirms.',current:false},
+  46:{why:'The Cabinet is part of the executive branch. It includes the heads of executive departments and other officials who advise the President.',matter:'The executive branch is much larger than the President alone.',remember:'Cabinet → executive branch.'},
+  47:{why:'The President’s Cabinet advises the President on matters related to the duties of their departments and offices.',matter:'Cabinet departments help the executive branch administer federal responsibilities.',remember:'Cabinet = advisers.'},
+  48:{why:'Secretary of State, Secretary of Education, Secretary of Homeland Security, Attorney General, and Secretary of Agriculture are all Cabinet-level positions. Because each listed pair consists of Cabinet-level positions, “All of the above” is complete.',matter:'Cabinet departments help the President carry out executive responsibilities across many areas of government.',remember:'Cabinet-level positions = heads of major executive departments + Attorney General.'},
+  49:{why:'The Electoral College is the constitutional process used to formally elect the President and Vice President. It does not write laws or decide court cases.',matter:'Understanding it helps explain how presidential elections translate state election results into electoral votes.',remember:'Electoral College → elects President/Vice President.'},
+  50:{why:'The federal judicial branch includes the Supreme Court and federal courts. The quiz’s answer identifies those federal courts as the relevant part of the judicial branch.',matter:'Federal courts interpret federal law and the Constitution within the judicial system.',remember:'Judicial branch → Supreme Court + federal courts.'},
+  51:{why:'One major role of the judicial branch is deciding whether laws are consistent with the Constitution.',matter:'Judicial review helps enforce constitutional limits on government.',remember:'Courts → interpret law and Constitution.'},
+  52:{why:'The Supreme Court is the highest court in the United States.',matter:'It is the highest level of the federal judiciary and has final authority on many federal constitutional and legal questions.',remember:'Highest court = Supreme Court.'},
+  53:{why:'The Supreme Court normally has nine seats.',matter:'The number of seats is set by federal law rather than directly fixed in the Constitution.',remember:'Supreme Court = 9 seats.'},
+  54:{why:'Five justices are usually needed for a majority decision when all nine seats are filled.',matter:'A majority is more than half of nine, so five votes are needed for a decision by a full Court.',remember:'9 justices → 5 is a majority.'},
+  55:{why:'Supreme Court justices serve during good behavior, commonly described as serving for life unless they resign, retire, or are removed through impeachment and conviction.',matter:'Long judicial tenure is intended to support judicial independence from short-term political pressure.',remember:'Federal judges → good behavior, commonly “for life.”'},
+  56:{why:'Long tenure helps limit outside political pressure on judges and supports judicial independence.',matter:'An independent judiciary can decide cases based on law and the Constitution rather than needing to satisfy changing political demands.',remember:'Long tenure → judicial independence.'},
+  57:{why:'The question bank uses John Roberts as the current Chief Justice.',matter:'The Chief Justice leads the Supreme Court and can change if a new Chief Justice is appointed.',remember:'Chief Justice questions are current-information questions.',current:true},
+  58:{why:'Declaring war is a power of the federal government, specifically Congress. States do not have the constitutional power to declare war as sovereign governments.',matter:'Federalism divides responsibilities between national and state governments.',remember:'Declare war → federal government.'},
+  59:{why:'Issuing driver’s licenses is a state government function.',matter:'States exercise many powers that affect everyday life, including licensing and education.',remember:'Driver’s license → state.'},
+  60:{why:'The 10th Amendment says powers not delegated to the United States by the Constitution, nor prohibited to the states, are reserved to the states or the people.',matter:'It is a key part of federalism and the division of governmental authority.',remember:'10th Amendment → reserved powers.'},
+  61:{why:'The question bank uses Kim Reynolds as the current Iowa governor.',matter:'Governors are state executive officials, and the answer can change after elections.',remember:'Iowa governor questions are current-information questions.',current:true},
+  62:{why:'Des Moines is the capital of Iowa.',matter:'A state capital is the location of the state government’s main institutions.',remember:'Iowa capital → Des Moines.'},
+  63:{why:'The 26th Amendment lowered the voting age to 18. The other voting amendments address other protections, including race, sex, and poll taxes.',matter:'Voting rights expanded through several constitutional amendments.',remember:'26th Amendment → 18 to vote.'},
+  64:{why:'U.S. citizens can vote in federal elections, run for federal office when eligible, and serve on juries subject to applicable law.',matter:'Citizenship carries specific civic rights and responsibilities.',remember:'Federal voting + federal office + jury service → citizens.'},
+  65:{why:'Freedom of speech, freedom of assembly, and the right to petition the government are examples of rights protected by the First Amendment and available to people living in the United States.',matter:'These rights protect civic participation and expression.',remember:'Speech + assembly + petition = First Amendment freedoms.'},
+  66:{why:'The Pledge of Allegiance expresses loyalty to the flag of the United States, symbolizing the nation.',matter:'National symbols are part of civic identity and public life.',remember:'Pledge → flag.'},
+  67:{why:'The Oath of Allegiance includes promises such as giving up prior foreign allegiance where required and supporting and defending the Constitution and laws of the United States.',matter:'Naturalization includes a formal commitment to the United States and its constitutional system.',remember:'Oath → loyalty + Constitution.'},
+  68:{why:'People can become U.S. citizens by birth under applicable law or through naturalization. Citizenship can also be acquired through certain U.S.-citizen parents.',matter:'Citizenship has legal pathways and carries specific rights and responsibilities.',remember:'Citizenship → birth or naturalization, with other legal pathways.'},
+  69:{why:'Voting, running for office, participating in political parties or campaigns, and joining civic or community groups are all examples of civic participation. Therefore “All of the above” is complete.',matter:'Civic participation is how people take part in public life and influence their communities and government.',remember:'Vote + organize + serve → civic participation.'},
+  70:{why:'Voting is one way Americans can serve their country by participating in democratic government.',matter:'Civic service includes participation in the institutions and communities of the country.',remember:'Serving the country can include voting.'},
+  71:{why:'Paying federal taxes is important because federal tax obligations are established by law and fund government functions.',matter:'Taxes support the operation of government and public services.',remember:'Federal taxes → required by law.'},
+  72:{why:'For people required to register, Selective Service registration is required by law and is connected to the federal system for possible military conscription.',matter:'The question tests a legal civic responsibility rather than a voting requirement.',remember:'Selective Service → registration is required by law for those covered.'},
+  73:{why:'Religious freedom was one reason colonists came to America, although people came for many different reasons.',matter:'Understanding migration motives helps explain the diversity of colonial America.',remember:'Colonists came for many reasons, including religious freedom.'},
+  74:{why:'American Indians, also called Native Americans, lived in the Americas before European arrival.',matter:'Their histories predate European colonization and are central to American history.',remember:'Before Europeans → Indigenous peoples.'},
+  75:{why:'Millions of Africans were forcibly transported to the Americas and enslaved.',matter:'Understanding slavery is essential to understanding American history, the Civil War, emancipation, and later civil-rights struggles.',remember:'Transatlantic slavery → Africans were forcibly enslaved.'},
+  76:{why:'The American Revolution was the war in which the colonies fought for independence from Britain.',matter:'The Revolution led to independence and the creation of the United States.',remember:'Independence from Britain → American Revolution.'},
+  77:{why:'Taxation without representation was one grievance against British rule. Colonists objected to being taxed by a government in which they lacked elected representation.',matter:'The grievance connects directly to ideas of representation and consent in government.',remember:'No representation + taxes → major revolutionary grievance.'},
+  78:{why:'Thomas Jefferson is identified as the primary writer of the Declaration of Independence, with the document developed and adopted by the Continental Congress.',matter:'The Declaration became a foundational statement of independence and political principles.',remember:'Jefferson → Declaration writer.'},
+  79:{why:'The Declaration of Independence was adopted on July 4, 1776.',matter:'July 4 became a national symbol of independence and is celebrated as Independence Day.',remember:'July 4, 1776.'},
+  80:{why:'The Declaration of Independence was an important event of the American Revolution. Other accepted events include Bunker Hill, Saratoga, Yorktown, Valley Forge, and Washington Crossing the Delaware/Battle of Trenton.',matter:'The Revolution unfolded through many military, political, and diplomatic events.',remember:'Revolution → Declaration, Saratoga, Yorktown, Valley Forge, etc.'},
+  81:{why:'The 13 original states were the colonies that formed the early United States. The correct choice lists five of those original states.',matter:'Knowing the original states helps connect the colonial period to the creation of the new nation.',remember:'Original 13 → New England, Middle, and Southern colonies.'},
+  82:{why:'The U.S. Constitution was written in 1787 at the Constitutional Convention.',matter:'The Constitution replaced the Articles of Confederation as the framework of the federal government.',remember:'1787 → Constitution.'},
+  83:{why:'James Madison was one of the writers of the Federalist Papers, along with Alexander Hamilton and John Jay.',matter:'The essays argued for ratification of the proposed Constitution and explained its design.',remember:'Federalist Papers → Madison, Hamilton, Jay.'},
+  84:{why:'The Federalist Papers supported passage and ratification of the U.S. Constitution and explained how the proposed government would work.',matter:'They are important primary-source writings about the Constitution’s design and ratification debate.',remember:'Federalist Papers → support Constitution.'},
+  85:{why:'Benjamin Franklin was a U.S. diplomat among many other accomplishments.',matter:'Franklin played an important role in diplomacy during the founding era and helped the new nation gain foreign support.',remember:'Franklin → diplomat.'},
+  86:{why:'George Washington was the first President of the United States and a leading military and founding figure.',matter:'His leadership connected the Revolutionary War, Constitutional Convention, and early presidency.',remember:'Washington → first President.'},
+  87:{why:'Thomas Jefferson wrote the Declaration of Independence and later served as the third President.',matter:'His work connects the founding era with the development of the early republic.',remember:'Jefferson → Declaration.'},
+  88:{why:'James Madison is known as the “Father of the Constitution,” was the fourth President, and helped write the Federalist Papers.',matter:'Madison was central to the design and defense of the constitutional system.',remember:'Madison → Constitution + Federalist Papers.'},
+  89:{why:'Alexander Hamilton was one of the writers of the Federalist Papers and the first Secretary of the Treasury.',matter:'Hamilton helped explain and build the new federal government’s financial and constitutional system.',remember:'Hamilton → Federalist Papers + Treasury.'},
+  90:{why:'The United States purchased the Louisiana Territory from France in 1803.',matter:'The Louisiana Purchase greatly expanded U.S. territory and affected westward expansion.',remember:'1803 → Louisiana Purchase.'},
+  91:{why:'The Spanish-American War was one U.S. war fought in the 1800s. Other accepted answers include the War of 1812, Mexican-American War, and Civil War.',matter:'These wars shaped U.S. territory, foreign policy, and domestic politics during the 19th century.',remember:'1800s wars → 1812, Mexican-American, Civil, Spanish-American.'},
+  92:{why:'The Civil War was fought between the Union in the North and the Confederacy in the South.',matter:'The war preserved the Union and led to emancipation and major constitutional changes.',remember:'North vs. South → Civil War.'},
+  93:{why:'The Emancipation Proclamation was an important Civil War event. Other accepted events include Fort Sumter, Vicksburg, Gettysburg, Sherman’s March, Appomattox, Antietam, and Lincoln’s assassination.',matter:'Major Civil War events help explain the war’s military course and its consequences for slavery and the Union.',remember:'Civil War events → Gettysburg, Vicksburg, Appomattox, Emancipation, etc.'},
+  94:{why:'Abraham Lincoln led the United States during the Civil War and is also associated with preserving the Union, the Emancipation Proclamation, the Gettysburg Address, and being the 16th President.',matter:'Lincoln’s leadership is central to understanding the Civil War and emancipation.',remember:'Lincoln → Civil War + Union + emancipation.'},
+  95:{why:'The Emancipation Proclamation declared enslaved people in areas rebelling against the Union to be free, with important wartime and geographic limits. It did not by itself immediately end slavery everywhere.',matter:'It connected the Civil War to emancipation and changed the purpose and consequences of the conflict.',remember:'Emancipation Proclamation → freedom in rebelling Confederate areas.'},
+  96:{why:'The Civil War resulted in the abolition of slavery through the 13th Amendment and related postwar constitutional changes.',matter:'This is a central turning point in American history and the history of constitutional rights.',remember:'Civil War → slavery abolished through 13th Amendment.'},
+  97:{why:'The 14th Amendment established birthright citizenship for people born or naturalized in the United States and subject to its jurisdiction.',matter:'It became a foundational constitutional protection for citizenship and equal protection.',remember:'14th Amendment → citizenship.'},
+  98:{why:'The 15th Amendment prohibited denying the right to vote based on race, color, or previous condition of servitude. It was ratified in 1870.',matter:'It was a major constitutional expansion of voting rights during Reconstruction.',remember:'15th Amendment → voting rights regardless of race; 1870.'},
+  99:{why:'Elizabeth Cady Stanton was a leader of the women’s rights movement in the 1800s. Other accepted answers include Susan B. Anthony, Sojourner Truth, Harriet Tubman, Lucretia Mott, and Lucy Stone.',matter:'The movement challenged legal and political barriers facing women and helped lead toward later voting-rights changes.',remember:'Women’s rights leaders → Stanton, Anthony, Truth, Tubman, Mott, Stone.'},
+  100:{why:'World War II was one of the major U.S. military conflicts of the 1900s. USCIS also accepts World War I, the Korean War, Vietnam War, and Persian Gulf War.',matter:'These conflicts shaped U.S. foreign policy and domestic life across the 20th century.',remember:'1900s wars → WWI, WWII, Korea, Vietnam, Gulf.'},
+  101:{why:'The United States entered World War I to support the Allied Powers and oppose the Central Powers; German attacks on U.S. ships were also important.',matter:'The question connects U.S. involvement to the larger international conflict and the safety of American shipping.',remember:'WWI → Allied Powers + German attacks on U.S. ships.'},
+  102:{why:'The 19th Amendment was ratified in 1920 and prohibited denying the vote on the basis of sex.',matter:'It was a major expansion of constitutional voting rights for women.',remember:'19th Amendment → women’s voting rights → 1920.'},
+  103:{why:'The Great Depression was the longest economic recession in modern history, involving severe unemployment, business failures, and economic hardship.',matter:'It reshaped U.S. economic policy and led to major federal responses.',remember:'Great Depression = severe, long economic crisis.'},
+  104:{why:'The stock market crash of 1929 is associated with the beginning of the Great Depression.',matter:'The crash was part of a broader economic crisis rather than the only cause of the Depression.',remember:'1929 → stock market crash → Great Depression.'},
+  105:{why:'Franklin Roosevelt was President during the Great Depression and most of World War II.',matter:'His administration led major federal responses to the Depression and wartime mobilization.',remember:'FDR → Depression + WWII.'},
+  106:{why:'The Japanese attack on Pearl Harbor on December 7, 1941 led the United States to enter World War II.',matter:'Pearl Harbor transformed U.S. policy from non-belligerence to direct participation in the war.',remember:'WWII entry → Pearl Harbor.'},
+  107:{why:'Dwight Eisenhower was a general during World War II and later became the 34th President; he was also President during the Korean War.',matter:'His career connects U.S. military leadership in WWII with postwar presidential leadership.',remember:'Eisenhower → WWII general + 34th President.'},
+  108:{why:'The Soviet Union (USSR) was the principal rival of the United States during the Cold War. “Russia” is sometimes used informally in modern discussion, but the historical state involved in the Cold War was the Soviet Union.',matter:'The Cold War was a prolonged geopolitical rivalry between the United States and Soviet-led bloc, shaping foreign policy and military strategy for decades.',remember:'Cold War rival → Soviet Union (USSR).'},
+  109:{why:'Communism was a major concern of the United States during the Cold War. The rivalry also involved fears of nuclear war and competition between political and economic systems.',matter:'Cold War policy cannot be understood without the U.S.-Soviet ideological and strategic rivalry.',remember:'Cold War concern → communism + nuclear war.'},
+  110:{why:'The United States entered the Korean War in the context of stopping the spread of communism and supporting South Korea under the UN-led effort.',matter:'The Korean War was an early major conflict of the Cold War.',remember:'Korea → stop spread of communism.'},
+  111:{why:'The United States entered the Vietnam War in the context of stopping the spread of communism.',matter:'Vietnam was part of the wider Cold War struggle in Southeast Asia.',remember:'Vietnam → stop spread of communism.'},
+  112:{why:'The civil rights movement fought to end racial discrimination and secure equal rights.',matter:'It led to major legal and social changes, including federal civil-rights protections.',remember:'Civil rights movement → end racial discrimination.'},
+  113:{why:'Martin Luther King, Jr. is especially associated with the civil rights movement and efforts to end racial discrimination.',matter:'His leadership and nonviolent activism became central to the modern civil-rights movement.',remember:'MLK → civil rights.'},
+  114:{why:'The United States entered the Persian Gulf War to force Iraqi forces out of Kuwait after Iraq invaded Kuwait.',matter:'The conflict illustrates U.S. involvement in international security and regional conflicts after the Cold War.',remember:'Gulf War → Iraq out of Kuwait.'},
+  115:{why:'On September 11, 2001, terrorists carried out attacks in the United States, including attacks on the World Trade Center and Pentagon and the crash of Flight 93 in Pennsylvania.',matter:'The attacks had major effects on U.S. foreign policy, security, and military actions.',remember:'9/11 → terrorist attacks in the United States.'},
+  116:{why:'USCIS accepts the War in Afghanistan, War in Iraq, and Global War on Terror as conflicts after September 11, 2001.',matter:'These conflicts shaped U.S. foreign policy and military operations in the early 21st century.',remember:'After 9/11 → Afghanistan, Iraq, Global War on Terror.'},
+  117:{why:'Apache is an American Indian tribe. Cherokee, Navajo, and many other tribes are also accepted answers, so “All of the above” is complete in this multiple-choice version.',matter:'Recognizing the many distinct Indigenous nations and communities is an important part of U.S. history.',remember:'American Indian tribe → Apache, Cherokee, Navajo, etc.'},
+  118:{why:'Airplanes, light bulbs, and assembly lines are all examples of American innovations listed by USCIS, so “All of the above” is complete.',matter:'Innovation changed transportation, manufacturing, communication, and everyday life in the United States.',remember:'Innovation → airplane + light bulb + assembly line.'},
+  119:{why:'Washington, DC is the capital of the United States and the seat of the federal government.',matter:'The national capital is where the main institutions of the federal government are located.',remember:'U.S. capital → Washington, DC.'},
+  120:{why:'The Statue of Liberty is in New York Harbor, on Liberty Island. USCIS also accepts answers such as New York Harbor, Liberty Island, New Jersey, near New York City, or on the Hudson River.',matter:'The statue is a major national symbol associated with liberty and immigration.',remember:'Statue of Liberty → New York Harbor / Liberty Island.'},
+  121:{why:'The 13 stripes represent the 13 original colonies.',matter:'The flag visually connects the present United States to the colonies that declared independence.',remember:'13 stripes → 13 original colonies.'},
+  122:{why:'The 50 stars represent the 50 states.',matter:'The flag changes when states are admitted to the Union, so the stars represent the current number of states.',remember:'50 stars → 50 states.'},
+  123:{why:'The national anthem is “The Star-Spangled Banner.”',matter:'National symbols help citizens recognize important traditions and history.',remember:'Anthem → Star-Spangled Banner.'},
+  124:{why:'“E Pluribus Unum” means “Out of many, one.” It expresses the idea of many states or people forming one nation.',matter:'The motto reflects unity within a diverse country.',remember:'E Pluribus Unum → Out of many, one.'},
+  125:{why:'Independence Day celebrates U.S. independence from Britain and is often called the country’s birthday.',matter:'It commemorates the Declaration of Independence and the founding-era struggle for independence.',remember:'July 4 → Independence Day.'},
+  126:{why:'Veterans Day, Independence Day, and Martin Luther King, Jr. Day are all U.S. national holidays. The question asks for three.',matter:'National holidays commemorate people, events, and civic traditions important to the United States.',remember:'Examples: Veterans Day + Independence Day + MLK Day.'},
+  127:{why:'Memorial Day honors U.S. service members who died while serving in the military.',matter:'It distinguishes those who died in military service from living veterans, who are honored on Veterans Day.',remember:'Memorial Day → remember those who died in military service.'},
+  128:{why:'Veterans Day honors people who have served in the U.S. military.',matter:'It recognizes military veterans and is distinct from Memorial Day, which honors those who died in military service.',remember:'Veterans Day → those who served.'}
+};
+
+const currentOfficeNotes = {
+  23:'Current-officeholder note: The question bank currently uses Chuck Grassley for Iowa. Officeholders can change after elections or appointments; use the official current officeholder required at your actual test.',
+  29:'Current-officeholder note: Your U.S. Representative depends on your congressional district. Do not use a hard-coded answer; check the official current representative for your district.',
+  30:'Current-officeholder note: The question bank currently uses Mike Johnson as Speaker of the House. This can change, so use the official current officeholder at your actual test.',
+  38:'Current-officeholder note: The question bank currently uses Donald Trump as President. Presidential answers can change after elections, so use the official President serving at the time of your actual test.',
+  39:'Current-officeholder note: The question bank currently uses JD Vance as Vice President. This can change after an election or succession, so use the official current officeholder at your actual test.',
+  57:'Current-officeholder note: The question bank currently uses John Roberts as Chief Justice. This can change through appointment, so use the official current Chief Justice at your actual test.',
+  61:'Current-officeholder note: The question bank currently uses Kim Reynolds as Iowa Governor. State officeholders can change after elections, so use the official current governor at your actual test.'
+};
+
+const choiceReasons = {
+  1:{0:'A republic describes a government in which the people govern through elected representatives. It is accurate, but this question’s choices include additional accurate descriptions.',1:'A Constitution-based federal republic describes the constitutional and federal structure of the United States. It is accurate, but not the whole set of descriptions offered.',2:'Representative democracy describes the people choosing representatives to govern. It is accurate, but it is not the only accurate description in the choices.'},
+  13:{0:'This is one part of the rule of law: no person is above the law.',1:'Leaders are subject to the same legal system and must obey the law.',2:'Everyone is expected to follow the law, making this another correct part of the rule of law.'},
+  41:{0:'The President signs bills into law as part of the executive role in the lawmaking process.',1:'The President can veto bills passed by Congress.',2:'The executive branch, led by the President, enforces federal laws.',
+  },
+  48:{0:'The Secretary of State and Secretary of Education are Cabinet-level positions.',1:'The Secretary of Education and Secretary of Homeland Security are Cabinet-level positions.',2:'The Attorney General and Secretary of Agriculture are Cabinet-level positions.'},
+  69:{0:'Voting or running for office are direct forms of civic participation.',1:'Joining a political party or helping a campaign are forms of political participation.',2:'Joining a civic or community group is a form of civic participation.'},
+  117:{0:'Apache is an American Indian tribe.',1:'Cherokee is an American Indian tribe.',2:'Navajo is an American Indian tribe.'},
+  118:{0:'Airplane is listed by USCIS as an American innovation.',1:'The light bulb is listed by USCIS as an American innovation.',2:'The assembly line is listed by USCIS as an American innovation.'}
+};
+
+const genericWhy = {
+  'supreme law':'The question is asking which document has the highest legal authority in the U.S. constitutional system.',
+  'senator':'The question is about the role, election, term, or representation of U.S. senators.',
+  'representative':'The question is about House representation and congressional districts.',
+  'president':'The question is about the President’s constitutional role or current officeholder.',
+  'judicial':'The question is about the courts and the judicial branch.',
+  'constitution':'The question is testing the purpose, structure, or meaning of the U.S. Constitution.',
+  'amendment':'The question is testing how a constitutional amendment changed or protects the U.S. system.',
+  'vote':'The question is testing a voting right, voting amendment, or civic participation.',
+  'war':'The question is asking you to connect a war with the correct time period, cause, event, or result.'
+};
+
+function getLearningInfo(q){
+  if(learningInfo[q.n]) return learningInfo[q.n];
+  const lower=q.q.toLowerCase();
+  let why='This answer directly addresses what the question is asking. The other choices refer to different people, events, institutions, or ideas, so they do not answer this particular question.';
+  for(const key in genericWhy){if(lower.includes(key)){why=genericWhy[key]+' The correct choice is the one that matches that specific civic concept.';break;}}
+  return {why,matter:'Understanding this fact helps connect the question to the larger topic covered by the USCIS civics test.',remember:'Connect the key term in the question to the correct fact instead of memorizing the choice alone.'};
+}
+
+function classifyChoice(q,i){
+  const allIndex=q.options.findIndex(o=>o.trim().toLowerCase()==='all of the above');
+  if(i===q.answer) return {label:'Correct and complete',kind:'complete'};
+  if(allIndex>=0 && q.answer===allIndex && i<allIndex) return {label:'Correct, but incomplete',kind:'incomplete'};
+  // Specific choices that are accurate descriptions but do not fully answer the question.
+  if(q.n===28 && i===1) return {label:'Correct, but incomplete',kind:'incomplete'};
+  return {label:'Incorrect / does not answer the question',kind:'incorrect'};
+}
+
+function choiceExplanation(q,i,status){
+  if(choiceReasons[q.n] && choiceReasons[q.n][i]) return choiceReasons[q.n][i];
+  if(status.kind==='complete') return 'This choice directly and completely answers the question.';
+  if(status.kind==='incomplete') return 'This statement is factually correct, but the question calls for a broader or more complete answer than this choice alone provides.';
+  const opt=q.options[i];
+  const ans=q.answer===null?'the student’s own current answer':q.options[q.answer];
+  return `“${escapeHtml(opt)}” does not match the specific fact the question is asking for. The question is asking for ${escapeHtml(ans)} in this question bank.`;
+}
+
+function explain(q){
+  const info=getLearningInfo(q);
+  if(q.answer===null){
+    return `<div class="learnHead"><h3>🧠 Learning Mode</h3></div><div class="learnBody">
+      <div class="learnSection learnSelf"><h4>THE ANSWER</h4><p class="learnAnswer">Your own current U.S. Representative</p><p>This is a personal/current-answer question. The quiz should not invent a representative for you.</p></div>
+      <div class="learnSection"><h4>WHY THIS IS CORRECT</h4><p>${info.why}</p></div>
+      <div class="learnSection"><h4>WHAT THE OTHER CHOICES MEAN</h4><p>There are no answer choices for this self-check question. You should provide the U.S. Representative who represents your congressional district.</p></div>
+      <div class="learnSection"><h4>WHY IT MATTERS</h4><p>${info.matter}</p></div>
+      <div class="learnSection"><h4>REMEMBER</h4><p>${info.remember}</p></div>
+      <div class="learnCallout">${currentOfficeNotes[q.n] || 'Because this is a current official, verify the officeholder using official current information before the actual test.'}</div>
+      <div class="learnSection"><p class="learnSource">Source: USCIS 2025 Civics Test Study Guide / 2025 Civics Test Questions and Answers.</p></div>
+    </div>`;
+  }
+  const allIndex=q.options.findIndex(o=>o.trim().toLowerCase()==='all of the above');
+  const allCorrect=allIndex>=0 && q.answer===allIndex;
+  const choices=q.options.map((opt,i)=>{
+    const status=classifyChoice(q,i);
+    return `<li class="learnChoice"><strong>${String.fromCharCode(65+i)}. ${escapeHtml(opt)}</strong><span class="learnStatus ${status.kind}">${status.label}</span>${choiceExplanation(q,i,status)}</li>`;
+  }).join('');
+  const accepted=acceptedAnswers[q.n];
+  const acceptedHtml=accepted ? `<div class="learnSection"><h4>ACCEPTED ANSWERS</h4><p>USCIS may accept multiple answers for this question on the oral civics test. Examples listed in the 2025 study guide include:</p><ul class="learnAccepted">${accepted.map(a=>`<li>${escapeHtml(a)}</li>`).join('')}</ul></div>` : '';
+  const allCallout=allIndex>=0 ? `<div class="learnCallout"><b>All of the above:</b> ${allCorrect ? 'Each preceding choice is correct, but each one alone is incomplete. “All of the above” is correct and complete because it combines all of the correct statements.' : 'This option can be selected only when every preceding choice is correct. Here, at least one preceding choice does not correctly answer the question, so “All of the above” cannot be selected.'}</div>` : '';
+  const currentHtml=currentOfficeNotes[q.n] ? `<div class="learnCallout learnCurrent"><b>Current officeholder:</b> ${currentOfficeNotes[q.n]}</div>` : '';
+  return `<div class="learnHead"><h3>🧠 Learning Mode</h3></div><div class="learnBody">
+    <div class="learnSection"><h4>THE ANSWER</h4><p class="learnAnswer">${String.fromCharCode(65+q.answer)}. ${escapeHtml(q.options[q.answer])}</p></div>
+    <div class="learnSection"><h4>WHY THIS IS CORRECT</h4><p>${info.why}</p></div>
+    <div class="learnSection"><h4>WHAT THE OTHER CHOICES MEAN</h4><ul class="learnChoices">${choices}</ul>${allCallout}</div>
+    <div class="learnSection"><h4>WHY IT MATTERS</h4><p>${info.matter}</p></div>
+    <div class="learnSection"><h4>REMEMBER</h4><p>${info.remember}</p></div>
+    ${acceptedHtml}${currentHtml}
+    <div class="learnSection"><p class="learnSource">Source: USCIS 2025 Civics Test Study Guide / 2025 Civics Test Questions and Answers.</p></div>
+  </div>`;
+}
+
+function getSectionForQuestion(n){
+  let currentSection='';
+  for(const q of questions){
+    if(q.section) currentSection=q.section;
+    if(q.n===n) return currentSection;
+  }
+  return '';
+}
+
+const STORAGE_KEY = 'sf369-civics-proficiency-v1';
+let proficiency = {};
+
+function loadProficiency(){
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};}catch(e){return {};}
+}
+function saveProficiency(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(proficiency));}catch(e){}}
+proficiency = loadProficiency();
+function recordResult(){
+  const sectionTotals={};
+  questions.forEach(q=>{if(q.graded){const sec=getSectionForQuestion(q.n);sectionTotals[sec]=(sectionTotals[sec]||0)+1;}});
+  questions.forEach(q=>{
+    if(!q.graded || !Object.prototype.hasOwnProperty.call(selections,q.n)) return;
+    const sec=getSectionForQuestion(q.n);
+    if(!proficiency[sec]) proficiency[sec]={correct:0,answered:0,total:sectionTotals[sec]};
+    proficiency[sec].answered++;
+    if(selections[q.n].choice===q.answer) proficiency[sec].correct++;
+  });
+  saveProficiency();
+}
+function renderTracker(targetId){
+  const el=document.getElementById(targetId); if(!el) return;
+  const sections=[]; let currentSection='';
+  questions.forEach(q=>{if(q.section) currentSection=q.section;if(q.graded && !sections.includes(currentSection)) sections.push(currentSection);});
+  const has=sections.some(s=>proficiency[s]?.answered);
+  if(!has){el.innerHTML='<div class="tracker"><h3>📊 Section proficiency</h3><div class="trackEmpty">Complete questions in Learning Mode or a practice test to build your proficiency tracker.</div></div>';return;}
+  el.innerHTML='<div class="tracker"><h3>📊 Section proficiency</h3>'+sections.map(sec=>{const d=proficiency[sec]||{correct:0,answered:0,total:0};const pct=d.answered?Math.round(d.correct/d.answered*100):0;return `<div class="trackItem"><div class="trackHead"><span>${sec.replace('American Government ','Gov. ').replace('American History ','History ')}</span><span>${d.answered}/${d.total} answered • ${pct}%</span></div><div class="trackBar"><div class="trackFill" style="width:${pct}%"></div></div></div>`;}).join('')+'</div>';
+}
+
+function render(){
+  const q = questions[order[current]];
+  document.getElementById('count').textContent = `Question ${current+1} of ${order.length}`;
+  document.getElementById('bar').style.width = `${((current+1)/order.length)*100}%`;
+  document.getElementById('badge').textContent = q.graded ? `QUESTION ${q.n}` : `QUESTION ${q.n} • SELF-CHECK`;
+  document.getElementById('sectionTitle').textContent = q.section || '';
+  document.getElementById('sectionTitle').style.display = q.section ? 'block' : 'none';
+  document.getElementById('question').textContent = q.q;
+  const answers = document.getElementById('answers');
+  const feedback = document.getElementById('feedback');
+  answers.innerHTML='';
+  feedback.className='feedback';
+  feedback.textContent='';
+  document.getElementById('learning').style.display='none';
+  document.getElementById('learning').innerHTML='';
+  document.getElementById('next').disabled = !Object.prototype.hasOwnProperty.call(selections,q.n);
+  document.getElementById('back').disabled = current===0;
+
+  if(!q.graded){
+    const input=document.createElement('input');
+    input.className='answer';
+    input.placeholder='Type your answer';
+    input.value=selections[q.n]?.text||'';
+    input.addEventListener('input',()=>{
+      selections[q.n]={text:input.value};
+      const hasAnswer=!!input.value.trim();
+      document.getElementById('next').disabled = !hasAnswer;
+      if(learningMode && hasAnswer){
+        const learn=document.getElementById('learning');
+        learn.style.display='block';
+        learn.innerHTML=explain(q);
+      }else{
+        document.getElementById('learning').style.display='none';
+        document.getElementById('learning').innerHTML='';
+      }
+    });
+    answers.appendChild(input);
+    feedback.className='feedback neutral';
+    feedback.textContent='Self-check: this question is not scored because the supplied sheet does not provide an answer key.';
+    if(learningMode && input.value.trim()){
+      const learn=document.getElementById('learning');
+      learn.style.display='block';
+      learn.innerHTML=explain(q);
+    }
+    return;
+  }
+
+  q.options.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='option';
+    b.textContent=String.fromCharCode(65+i)+'. '+opt;
+    b.addEventListener('click',()=>choose(i));
+    answers.appendChild(b);
+  });
+
+  if(Object.prototype.hasOwnProperty.call(selections,q.n)){
+    showSelection(q,selections[q.n].choice);
+  }
+}
+
+function choose(choice){
+  const q=questions[order[current]];
+  if(Object.prototype.hasOwnProperty.call(selections,q.n)) return;
+  selections[q.n]={choice};
+  if(q.graded){
+    gradedAnswered.add(q.n);
+    if(choice===q.answer) correct++;
+  }
+  showSelection(q,choice);
+  document.getElementById('next').disabled=false;
+}
+
+function showSelection(q,choice){
+  const buttons=[...document.querySelectorAll('.option')];
+  buttons.forEach((b,i)=>{
+    b.disabled=true;
+    if(i===q.answer) b.classList.add('correct');
+    if(i===choice && choice!==q.answer) b.classList.add('wrong');
+  });
+  const fb=document.getElementById('feedback');
+  fb.className='feedback '+(choice===q.answer?'good':'bad');
+  fb.textContent=choice===q.answer?'✓ Correct!':'✗ Not quite. The correct answer is '+String.fromCharCode(65+q.answer)+'. '+q.options[q.answer];
+  if(learningMode){
+    const learn=document.getElementById('learning');
+    learn.style.display='block';
+    learn.innerHTML=explain(q);
+  }
+}
+
+function startQuiz(mode,learn=false){
+  shuffleMode=mode;
+  learningMode=learn;
+  current=0; selections={}; correct=0; gradedAnswered=new Set();
+  order=shuffleMode ? shuffledOrder() : questions.map((_,i)=>i);
+  document.getElementById('home').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('quizArea').style.display='block';
+  updateModeUI();
+  render();
+}
+
+function goHome(){
+  learningMode=false;
+  document.getElementById('quizArea').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('home').style.display='block';
+  renderTracker('homeTracker');
+}
+
+document.getElementById('regularStart').addEventListener('click',()=>startQuiz(false));
+document.getElementById('shuffleStart').addEventListener('click',()=>startQuiz(true,false));
+document.getElementById('learningStart').addEventListener('click',()=>startQuiz(false,true));
+document.getElementById('homeBtn').addEventListener('click',goHome);
+
+document.getElementById('next').addEventListener('click',()=>{
+  if(current<order.length-1){current++;render();}else finish();
+});
+document.getElementById('back').addEventListener('click',()=>{if(current>0){current--;render();}});
+document.getElementById('restart').addEventListener('click',resetQuiz);
+document.getElementById('shuffleBtn').addEventListener('click',()=>{ shuffleMode=!shuffleMode; learningMode=false; resetQuiz(); });
+
+function finish(){
+  recordResult();
+  const gradedTotal=questions.filter(q=>q.graded).length;
+  const pct=(correct/gradedTotal)*100;
+  document.getElementById('quizArea').style.display='none';
+  document.getElementById('result').style.display='block';
+  document.getElementById('score').textContent=pct.toFixed(1)+'%';
+  document.getElementById('resultTitle').textContent=pct>=PASS?'🎉 You passed!':'Keep practicing — you can do it!';
+  document.getElementById('score').className='score '+(pct>=PASS?'pass':'fail');
+  document.getElementById('resultMessage').innerHTML=pct>=PASS
+    ? `<p>You got <b>${correct}</b> of <b>${gradedTotal}</b> scored questions correct. The passing score is ${PASS}%.</p>`
+    : `<p>You got <b>${correct}</b> of <b>${gradedTotal}</b> scored questions correct. You need at least <b>${Math.ceil(gradedTotal*PASS/100)}</b> correct to pass.</p>`;
+  document.getElementById('correctStat').textContent=correct;
+  document.getElementById('wrongStat').textContent=gradedTotal-correct;
+  document.getElementById('gradedStat').textContent=gradedTotal;
+  document.getElementById('resultMessage').insertAdjacentHTML('afterend','<div id="resultTracker"></div>');
+  renderTracker('resultTracker');
+}
+const disclaimerOverlay=document.getElementById('disclaimerOverlay');
+const disclaimerAgree=document.getElementById('disclaimerAgree');
+const disclaimerContinue=document.getElementById('disclaimerContinue');
+disclaimerAgree.addEventListener('change',()=>{
+  disclaimerContinue.disabled=!disclaimerAgree.checked;
+});
+disclaimerContinue.addEventListener('click',()=>{
+  if(!disclaimerAgree.checked) return;
+  disclaimerOverlay.style.display='none';
+});
+updateModeUI();
+renderTracker('homeTracker');
+</script>
+</body>
+</html>
